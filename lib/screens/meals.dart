@@ -2,11 +2,24 @@
 
 import 'package:flutter/material.dart';
 import 'package:meals_app/models/meal.dart';
+import 'package:meals_app/screens/mealsscreen.dart';
 import 'package:meals_app/widgets/meals_data_item.dart';
 
 class Meals extends StatelessWidget {
-  const Meals({super.key, required this.title, required this.meals});
-  final String title;
+  const Meals({super.key, this.title, required this.meals , required this.addtoFavorites});
+
+  final void Function(Meal) addtoFavorites;
+
+  void _selectMeal(BuildContext context, Meal meal) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (ctx) => MealsScreen(meal: meal , addtoFavorites: addtoFavorites,),
+      ),
+    );
+  }
+
+  final String? title;
   final List<Meal> meals;
   @override
   Widget build(BuildContext context) {
@@ -39,15 +52,25 @@ class Meals extends StatelessWidget {
         children: [
           ...meals
               .map(
-                (meal) => MealsDataItem(currentmeal: meal),
+                (meal) => MealsDataItem(
+                  currentmeal: meal,
+                  selectMeal: () {
+                    _selectMeal(context, meal);
+                  },
+                ),
               )
               .toList(),
         ],
       );
     }
+
+    if (title == 'Favorites') {
+      return mealsOutput;
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Meals Section'),
+        title: Text(title!),
       ),
       body: mealsOutput,
     );
