@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:meals_app/models/meal.dart';
 import 'package:meals_app/screens/categories.dart';
 import 'package:meals_app/screens/meals.dart';
+import 'package:meals_app/widgets/SideDrawer.dart';
 
 class TabScreen extends StatefulWidget {
   const TabScreen({super.key});
@@ -64,6 +65,7 @@ class _TabScreenState extends State<TabScreen> {
       appBar: AppBar(
         title: Text(activePageTitle),
       ),
+      drawer: const SideDrawer(),
       body:
           activeScreen, // this is the active screen which is to be displayed , it changes dynamically ontap , whenever setstate is called.
       bottomNavigationBar: BottomNavigationBar(
