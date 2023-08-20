@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:meals_app/widgets/listTile.dart';
 
 class SideDrawer extends StatelessWidget {
-  const SideDrawer({super.key});
+  const SideDrawer({super.key, required this.changescreen});
+
+  final void Function(String) changescreen;
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -42,13 +44,15 @@ class SideDrawer extends StatelessWidget {
                 ],
               ),
             ),
-            const Listtile(
+            Listtile(
               tileTitle: 'Meals',
               tileIcon: Icons.fastfood,
+              changescreen: changescreen,
             ),
-            const Listtile(
-              tileTitle: 'Filter',
+            Listtile(
+              tileTitle: 'Filters',
               tileIcon: Icons.filter_list_alt,
+              changescreen: changescreen,
             ),
           ],
         ),

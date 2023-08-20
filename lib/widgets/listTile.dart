@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 
 class Listtile extends StatelessWidget {
-  const Listtile({super.key, required this.tileTitle, required this.tileIcon});
+  const Listtile({
+    super.key,
+    required this.tileTitle,
+    required this.tileIcon,
+    required this.changescreen,
+  });
+
   final String tileTitle;
   final IconData tileIcon;
+  final void Function(String) changescreen;
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -18,7 +26,9 @@ class Listtile extends StatelessWidget {
               fontSize: 20,
             ),
       ),
-      onTap: () {},
+      onTap: () {
+        changescreen(tileTitle);
+      },
     );
   }
 }

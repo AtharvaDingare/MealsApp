@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meals_app/models/meal.dart';
 import 'package:meals_app/screens/categories.dart';
+import 'package:meals_app/screens/filters.dart';
 import 'package:meals_app/screens/meals.dart';
 import 'package:meals_app/widgets/SideDrawer.dart';
 
@@ -13,6 +14,12 @@ class TabScreen extends StatefulWidget {
 }
 
 class _TabScreenState extends State<TabScreen> {
+  Map<Filter, bool> filterParameters = {
+    Filter.glutenFree: false,
+    Filter.lactoseFree: false,
+    Filter.vegetarian: false,
+    Filter.vegan: false
+  };
   int activeScreenIndex = 0;
   void _selectPageindex(int index) {
     setState(() {
@@ -47,10 +54,26 @@ class _TabScreenState extends State<TabScreen> {
     });
   }
 
+  void changeScreen(String screenname) async {
+    Navigator.of(context).pop();
+    if (screenname == 'Filters') {
+      final Map<Filter, bool>? result =
+          await Navigator.of(context).push<Map<Filter, bool>>(
+        MaterialPageRoute(
+          builder: (ctx) => FiltersScreen(filterParameters: filterParameters),
+        ),
+      );
+      setState(() {
+        filterParameters = result!;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget activeScreen = Categories(
       addtoFavorites: addtofavorites,
+      filterParameters: filterParameters,
     );
     var activePageTitle = 'Categories';
     if (activeScreenIndex == 1) {
@@ -65,7 +88,7 @@ class _TabScreenState extends State<TabScreen> {
       appBar: AppBar(
         title: Text(activePageTitle),
       ),
-      drawer: const SideDrawer(),
+      drawer: SideDrawer(changescreen: changeScreen),
       body:
           activeScreen, // this is the active screen which is to be displayed , it changes dynamically ontap , whenever setstate is called.
       bottomNavigationBar: BottomNavigationBar(
