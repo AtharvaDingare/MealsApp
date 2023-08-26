@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals_app/data/dummy_data.dart';
 import 'package:meals_app/models/category.dart';
 import 'package:meals_app/models/meal.dart';
-import 'package:meals_app/screens/filters.dart';
+import 'package:meals_app/providers/meals_provider.dart';
 import 'package:meals_app/screens/meals.dart';
 import 'package:meals_app/widgets/category_grid_item.dart';
+import 'package:meals_app/providers/filters_provider.dart';
 
-class Categories extends StatelessWidget {
-  const Categories(
-      {super.key,
-      required this.addtoFavorites,
-      required this.filterParameters});
+class Categories extends ConsumerWidget {
+  const Categories({super.key});
 
-  final void Function(Meal) addtoFavorites;
-  final Map<Filter, bool> filterParameters;
-
-  List<Meal> _filterallmeals(List<Meal> basicMeals, Map<Filter, bool> filterParameters, Category category) {
+  List<Meal> _filterallmeals(List<Meal> basicMeals,
+      Map<Filter, bool> filterParameters, Category category) {
     final List<Meal> filteredList = basicMeals
         .where((meal) => meal.categories.contains(category.id))
         .toList();
@@ -41,15 +38,16 @@ class Categories extends StatelessWidget {
     return outputList;
   }
 
-  void _selectCategory(BuildContext context, Category category) {
-    final filteredList = _filterallmeals(dummyMeals, filterParameters, category);
+  void _selectCategory(BuildContext context, Category category,
+      List<Meal> mealsList, Map<Filter, bool> filterParameters) {
+    final filteredList =
+        _filterallmeals(dummyMeals, filterParameters, category);
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (ctx) => Meals(
           title: category.title,
           meals: filteredList,
-          addtoFavorites: addtoFavorites,
         ),
       ),
     );
@@ -57,7 +55,8 @@ class Categories extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final filterParameters = ref.watch(filterMealProvider);
     return GridView(
         padding: const EdgeInsets.all(30),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -77,7 +76,8 @@ class Categories extends StatelessWidget {
             CategoryGridItem(
                 category: category,
                 selectCategory: () {
-                  _selectCategory(context, category);
+                  _selectCategory(context, category, ref.watch(mealsProvider),
+                      filterParameters);
                 }),
           //)
         ]);

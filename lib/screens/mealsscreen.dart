@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:meals_app/models/meal.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:meals_app/providers/favorites_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MealsScreen extends StatelessWidget {
-  const MealsScreen(
-      {super.key, required this.meal, required this.addtoFavorites});
+class MealsScreen extends ConsumerWidget {
+  const MealsScreen({
+    super.key,
+    required this.meal,
+  });
 
   final Meal meal;
-  final void Function(Meal) addtoFavorites;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -18,7 +21,17 @@ class MealsScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              addtoFavorites(meal);
+              bool isPresent = ref
+                  .read(favoriteMealsProvider.notifier)
+                  .toggleMealFavoriteStatus(meal);
+              ScaffoldMessenger.of(context).clearSnackBars();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(isPresent
+                      ? '${meal.title} has been removed from the Favorites'
+                      : '${meal.title} has been added to the Favorites'),
+                ),
+              );
             },
             icon: const Icon(Icons.star),
           ),

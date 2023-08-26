@@ -65,21 +65,23 @@ class MealsDataItem extends StatelessWidget {
                     const SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        MealItemTrait(
-                            icon: Icons.schedule,
-                            label: '${currentmeal.duration} min'),
-                        MealItemTrait(
-                          icon: Icons.work,
-                          label: complexityText,
-                        ),
-                        MealItemTrait(
-                          icon: Icons.attach_money,
-                          label: affordabilityText,
-                        ),
-                      ],
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          MealItemTrait(
+                              icon: Icons.schedule,
+                              label: '${currentmeal.duration} min'),
+                          MealItemTrait(
+                            icon: Icons.work,
+                            label: complexityText,
+                          ),
+                          MealItemTrait(
+                            icon: Icons.attach_money,
+                            label: affordabilityText,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
