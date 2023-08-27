@@ -13,6 +13,8 @@ class MealsScreen extends ConsumerWidget {
   final Meal meal;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final favoriteList = ref.watch(favoriteMealsProvider);
+    bool isFavorite = favoriteList.contains(meal);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -33,7 +35,7 @@ class MealsScreen extends ConsumerWidget {
                 ),
               );
             },
-            icon: const Icon(Icons.star),
+            icon: Icon(isFavorite ? Icons.star : Icons.star_border),
           ),
         ],
         backgroundColor: Theme.of(context).primaryColor,

@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals_app/data/dummy_data.dart';
 import 'package:meals_app/models/category.dart';
 import 'package:meals_app/models/meal.dart';
-import 'package:meals_app/providers/meals_provider.dart';
 import 'package:meals_app/screens/meals.dart';
 import 'package:meals_app/widgets/category_grid_item.dart';
 import 'package:meals_app/providers/filters_provider.dart';
@@ -11,37 +10,11 @@ import 'package:meals_app/providers/filters_provider.dart';
 class Categories extends ConsumerWidget {
   const Categories({super.key});
 
-  List<Meal> _filterallmeals(List<Meal> basicMeals,
-      Map<Filter, bool> filterParameters, Category category) {
-    final List<Meal> filteredList = basicMeals
-        .where((meal) => meal.categories.contains(category.id))
-        .toList();
-    List<Meal> outputList = [];
-    for (int i = 0; i < filteredList.length; i++) {
-      bool check = true;
-      if (filterParameters[Filter.glutenFree]!) {
-        check = (check && filteredList[i].isGlutenFree);
-      }
-      if (filterParameters[Filter.lactoseFree]!) {
-        check = (check && filteredList[i].isLactoseFree);
-      }
-      if (filterParameters[Filter.vegetarian]!) {
-        check = (check && filteredList[i].isVegetarian);
-      }
-      if (filterParameters[Filter.vegan]!) {
-        check = (check && filteredList[i].isVegan);
-      }
-      if (check) {
-        outputList.add(filteredList[i]);
-      }
-    }
-    return outputList;
-  }
-
   void _selectCategory(BuildContext context, Category category,
       List<Meal> mealsList, Map<Filter, bool> filterParameters) {
-    final filteredList =
-        _filterallmeals(dummyMeals, filterParameters, category);
+    final filteredList = mealsList
+        .where((meal) => meal.categories.contains(category.id))
+        .toList();
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -76,8 +49,8 @@ class Categories extends ConsumerWidget {
             CategoryGridItem(
                 category: category,
                 selectCategory: () {
-                  _selectCategory(context, category, ref.watch(mealsProvider),
-                      filterParameters);
+                  _selectCategory(context, category,
+                      ref.read(filteredMealsList), filterParameters);
                 }),
           //)
         ]);
