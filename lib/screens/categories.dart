@@ -8,6 +8,7 @@ import 'package:meals_app/widgets/category_grid_item.dart';
 import 'package:meals_app/providers/filters_provider.dart';
 
 class Categories extends ConsumerWidget {
+  
   const Categories({super.key});
 
   void _selectCategory(BuildContext context, Category category,
