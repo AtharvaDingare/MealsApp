@@ -35,16 +35,34 @@ class MealsScreen extends ConsumerWidget {
                 ),
               );
             },
-            icon: Icon(isFavorite ? Icons.star : Icons.star_border),
+            icon: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder: (child, animation) {
+                // the transition builder parameter takes a function which recieves a child (as specified in the AnimatedSwitcher) and an animation , and then we need to return some transition
+                return RotationTransition(
+                  //turns: animation, // this is the default animation created by flutter (whose value ranges from 0 to 1)
+                  turns: Tween(begin: 0.65, end: 1.0).animate(animation),
+                  child: child,
+                ); // there are many types of transition widgets like fadetransition , rotationtransition etc , in our case rotationtransition widget is something that would rotate the child widget that they recieve.
+                // read the documentation to see what all types of animation are available.
+              },
+              child: Icon(
+                isFavorite ? Icons.star : Icons.star_border,
+                key: ValueKey(isFavorite),
+              ), // the child on which the transition is to be applied.
+            ),
           ),
         ],
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: ListView(
         children: [
-          FadeInImage(
-            placeholder: MemoryImage(kTransparentImage),
-            image: NetworkImage(meal.imageUrl),
+          Hero(
+            tag: meal.id,
+            child: FadeInImage(
+              placeholder: MemoryImage(kTransparentImage),
+              image: NetworkImage(meal.imageUrl),
+            ),
           ),
           Text(
             'Ingredients',
